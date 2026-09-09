@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <!-- Эта строчка делает сайт удобным для телефонов -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Электронный сейф</title>
+  <style>
+    body {
+      font-family: 'Courier New', Courier, monospace;
+      background-color: #121212;
+      color: #00ff00; /* Зеленый хакерский цвет */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      padding: 20px;
+      box-sizing: border-box;
+      text-align: center;
+    }
+    .safe-box {
+      background-color: #1e1e1e;
+      padding: 30px 20px;
+      border-radius: 12px;
+      border: 2px solid #333;
+      box-shadow: 0 0 15px rgba(0, 255, 0, 0.1);
+      width: 100%;
+      max-width: 350px;
+    }
+    h2 {
+      margin-top: 0;
+      font-size: 24px;
+      letter-spacing: 2px;
+    }
+    p {
+      color: #aaa;
+      font-size: 16px;
+      margin-bottom: 25px;
+    }
+    /* Поле ввода пароля */
+    input {
+      font-size: 40px;
+      padding: 10px;
+      width: 80%;
+      text-align: center;
+      border: 2px solid #00ff00;
+      background-color: #000;
+      color: #00ff00;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      letter-spacing: 8px;
+      outline: none;
+    }
+    input::placeholder {
+      color: #005500;
+    }
+    /* Большая кнопка */
+    button {
+      font-size: 20px;
+      padding: 15px 30px;
+      cursor: pointer;
+      border: none;
+      border-radius: 8px;
+      background-color: #00ff00;
+      color: #000;
+      font-weight: bold;
+      width: 100%;
+      text-transform: uppercase;
+      box-shadow: 0 4px 0 #009900;
+    }
+    button:active {
+      box-shadow: 0 0 0 #009900;
+      transform: translateY(4px);
+    }
+    #message {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+      min-height: 24px;
+    }
+    /* Блок с координатами скрыт по умолчанию */
+    #secret-data {
+      display: none;
+      margin-top: 25px;
+      background: #000;
+      padding: 20px 10px;
+      border-radius: 8px;
+      border: 1px dashed #00ff00;
+    }
+    .coords {
+      font-size: 26px;
+      color: #fff;
+      margin: 10px 0;
+      display: block;
+    }
+    .map-btn {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 12px 20px;
+      background-color: #4285F4; /* Синий цвет Гугла */
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="safe-box">
+    <h2>🔒 СЕЙФ</h2>
+    <p>Введите код доступа</p>
+    
+    <!-- type="tel" специально для того, чтобы на телефоне открывались только крупные цифры -->
+    <input type="tel" id="password" placeholder="****" maxlength="4">
+    
+    <button id="btn" onclick="checkPassword()">ОТКРЫТЬ</button>
+    
+    <div id="message"></div>
+    
+    <div id="secret-data">
+      Координаты тайника:
+      <span class="coords">59.491881, 40.099120</span>
+      <a href="https://yandex.ru/maps/?pt=40.099120,59.491881&z=17&l=map" class="map-btn" target="_blank">Открыть в Картах</a>
+    </div>
+  </div>
+
+  <script>
+    // Запрещаем вводить больше 4 символов
+    document.getElementById('password').addEventListener('input', function (e) {
+      if (this.value.length > 4) {
+        this.value = this.value.slice(0, 4);
+      }
+    });
+
+    function checkPassword() {
+      const pass = document.getElementById('password').value;
+      const msg = document.getElementById('message');
+      const secret = document.getElementById('secret-data');
+      const input = document.getElementById('password');
+      const btn = document.getElementById('btn');
+      
+      if (pass === '8065') {
+        msg.innerText = "ДОСТУП РАЗРЕШЕН";
+        msg.style.color = "#00ff00";
+        secret.style.display = "block";
+        
+        // Прячем поле ввода и кнопку после успеха
+        input.style.display = 'none';
+        btn.style.display = 'none';
+      } else {
+        msg.innerText = "ОШИБКА: НЕВЕРНЫЙ КОД";
+        msg.style.color = "red";
+        secret.style.display = "none";
+        input.value = ''; // очищаем поле для новой попытки
+      }
+    }
+  </script>
+</body>
+</html>
