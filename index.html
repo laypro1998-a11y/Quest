@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>📺 Hartens TV Remote</title>
+    <title>📺 TV Remote - Поиск и управление</title>
     <style>
         * {
             margin: 0;
@@ -12,11 +12,10 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 16px;
-            color: #333;
         }
 
         .container {
@@ -36,11 +35,6 @@
             margin-bottom: 8px;
         }
 
-        .header p {
-            font-size: 14px;
-            opacity: 0.9;
-        }
-
         .card {
             background: white;
             border-radius: 12px;
@@ -49,148 +43,60 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
-        .input-group {
-            display: grid;
-            grid-template-columns: 1fr auto;
-            gap: 8px;
-            margin-bottom: 16px;
-        }
-
-        .input-group input {
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 14px;
-            transition: border-color 0.3s;
-        }
-
-        .input-group input:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
         .btn {
-            padding: 12px 16px;
+            width: 100%;
+            padding: 12px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
             border-radius: 8px;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
+            margin-bottom: 8px;
             font-size: 14px;
+            transition: all 0.2s;
         }
 
         .btn:active {
             transform: scale(0.98);
         }
 
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .btn-small {
-            padding: 10px 14px;
-            font-size: 13px;
-            border-radius: 6px;
-        }
-
-        .btn-on {
-            background: #4CAF50;
-        }
-
-        .btn-off {
-            background: #f44336;
-        }
-
-        .btn-more {
-            background: #2196F3;
-            width: 100%;
-            margin-top: 8px;
-        }
-
-        .status {
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 16px;
-            font-size: 13px;
-            font-weight: 500;
-        }
-
-        .status.connected {
-            background: #d4edda;
-            color: #155724;
-            border-left: 4px solid #28a745;
-        }
-
-        .status.disconnected {
-            background: #f8d7da;
-            color: #721c24;
-            border-left: 4px solid #dc3545;
-        }
-
-        .remote-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            margin-bottom: 16px;
-        }
-
-        .remote-grid .btn {
-            padding: 12px 8px;
-            font-size: 12px;
-        }
-
-        .remote-grid .btn-center {
-            grid-column: 2;
-        }
+        .btn-on { background: #4CAF50; }
+        .btn-off { background: #f44336; }
+        .btn-scan { background: #2196F3; }
 
         .controls-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 8px;
-            margin-bottom: 8px;
         }
 
         .controls-row .btn {
             width: 100%;
+            margin-bottom: 0;
         }
 
         .info {
             font-size: 12px;
             color: #666;
-            margin-top: 12px;
-            padding: 12px;
             background: #f5f5f5;
+            padding: 12px;
             border-radius: 6px;
+            margin-top: 12px;
         }
 
-        .info strong {
-            display: block;
-            margin-bottom: 4px;
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            font-size: 14px;
         }
 
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: #999;
-        }
-
-        .spinner {
-            display: inline-block;
-            width: 16px;
-            height: 16px;
-            border: 2px solid #f3f3f3;
-            border-top: 2px solid #667eea;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-right: 6px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        input:focus {
+            outline: none;
+            border-color: #667eea;
         }
 
         .tabs {
@@ -207,7 +113,6 @@
             border-radius: 8px;
             cursor: pointer;
             font-weight: 600;
-            transition: all 0.2s;
         }
 
         .tab-btn.active {
@@ -224,119 +129,177 @@
             display: block;
         }
 
-        .success {
-            background: #d4edda;
-            color: #155724;
-            padding: 12px;
+        .device-item {
+            background: #f9f9f9;
+            border: 2px solid #e0e0e0;
             border-radius: 8px;
-            margin-bottom: 12px;
-            border-left: 4px solid #28a745;
+            padding: 12px;
+            margin-bottom: 8px;
         }
 
-        .error {
+        .device-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .device-ip {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .device-select {
+            width: 100%;
+            padding: 8px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 6px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .scan-status {
+            background: #e3f2fd;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 12px;
+            border-left: 4px solid #2196F3;
+            font-size: 13px;
+            color: #1565c0;
+        }
+
+        .success-status {
+            background: #d4edda;
+            color: #155724;
+            border-left-color: #28a745;
+        }
+
+        .error-status {
             background: #f8d7da;
             color: #721c24;
-            padding: 12px;
-            border-radius: 8px;
+            border-left-color: #dc3545;
+        }
+
+        hr {
+            margin: 16px 0;
+            border: none;
+            border-top: 1px solid #eee;
+        }
+
+        h4 {
             margin-bottom: 12px;
-            border-left: 4px solid #dc3545;
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>📺 Hartens Remote</h1>
-            <p>Управление ТВ через WiFi</p>
+            <h1>📺 TV Remote</h1>
+            <p>Поиск и управление телевизорами</p>
         </div>
 
         <div class="card">
             <div class="tabs">
-                <button class="tab-btn active" onclick="switchTab('setup')">⚙️ Настройка</button>
+                <button class="tab-btn active" onclick="switchTab('search')">🔍 Поиск</button>
                 <button class="tab-btn" onclick="switchTab('control')">🎮 Управление</button>
             </div>
 
-            <!-- TAB: Настройка -->
-            <div id="setup" class="tab-content active">
-                <h3 style="margin-bottom: 16px;">🔌 Подключение к ТВ</h3>
+            <!-- TAB: Поиск -->
+            <div id="search" class="tab-content active">
+                <h3 style="margin-bottom: 16px;">🔍 Найти телевизоры в сети</h3>
                 
-                <div class="input-group">
-                    <input type="text" id="tvIP" placeholder="IP адрес (192.168.1.128)" value="192.168.1.128">
-                    <button class="btn btn-small" onclick="testConnection()">Тест</button>
+                <button class="btn btn-scan" onclick="scanNetwork()">
+                    <span id="scanBtnText">🔍 Сканировать сеть</span>
+                </button>
+
+                <div id="scanResults" style="display: none; margin-bottom: 16px;">
+                    <div id="scanStatus" class="scan-status">
+                        <span class="spinner"></span>Сканирование...
+                    </div>
                 </div>
 
-                <div id="statusDiv" class="status disconnected" style="display:none;">
-                    ❌ Отключено
-                </div>
+                <div id="deviceList"></div>
 
+                <hr>
+
+                <h3 style="margin-bottom: 16px;">📝 Или введи IP вручную</h3>
+                <input type="text" id="tvIP" placeholder="192.168.1.128" value="192.168.1.128">
+                <button class="btn" onclick="saveIP()">💾 Сохранить</button>
+                
                 <div class="info">
-                    <strong>💡 Как найти IP адреса ТВ:</strong>
-                    Меню → Сеть → WiFi → Информация<br><br>
-                    <strong>IP используется сейчас:</strong><br>
-                    <span id="currentIP">192.168.1.128</span>
+                    <strong>💡 Как найти IP ТВ:</strong><br>
+                    Меню → Сеть → WiFi → Информация о сети
                 </div>
-
-                <button class="btn" onclick="saveIP()" style="width: 100%; margin-top: 16px;">💾 Сохранить IP</button>
             </div>
 
             <!-- TAB: Управление -->
             <div id="control" class="tab-content">
-                <div id="messageDiv" style="display:none;"></div>
-
-                <div class="controls-row">
-                    <button class="btn btn-on" onclick="sendCommand('power_on')">🔘 Включить</button>
-                    <button class="btn btn-off" onclick="sendCommand('power_off')">⭕ Выключить</button>
+                <div style="background: #e3f2fd; padding: 12px; border-radius: 6px; margin-bottom: 16px; border-left: 4px solid #2196F3;">
+                    <strong style="color: #1565c0;">📍 Текущий IP:</strong>
+                    <div style="font-size: 14px; color: #1565c0;" id="currentIPDisplay">192.168.1.128</div>
                 </div>
 
-                <hr style="margin: 16px 0; border: none; border-top: 1px solid #eee;">
-
-                <h4 style="margin-bottom: 12px;">🔊 Громкость</h4>
                 <div class="controls-row">
-                    <button class="btn" onclick="sendCommand('volume_up')">🔊 Громче</button>
-                    <button class="btn" onclick="sendCommand('volume_down')">🔉 Тише</button>
+                    <button class="btn btn-on" onclick="cmd('power_on')">🔘 Включить</button>
+                    <button class="btn btn-off" onclick="cmd('power_off')">⭕ Выключить</button>
                 </div>
 
-                <hr style="margin: 16px 0; border: none; border-top: 1px solid #eee;">
+                <hr>
 
-                <h4 style="margin-bottom: 12px;">🎮 Навигация</h4>
-                <div class="remote-grid">
-                    <button class="btn" onclick="sendCommand('up')">⬆️</button>
+                <h4>🔊 Громкость</h4>
+                <div class="controls-row">
+                    <button class="btn" onclick="cmd('volume_up')">🔊 Громче</button>
+                    <button class="btn" onclick="cmd('volume_down')">🔉 Тише</button>
+                </div>
+
+                <hr>
+
+                <h4>🎮 Навигация</h4>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px;">
+                    <button class="btn" onclick="cmd('up')">⬆️</button>
                     <div></div>
-                    <button class="btn" onclick="sendCommand('home')">🏠</button>
+                    <button class="btn" onclick="cmd('home')">🏠</button>
                     
-                    <button class="btn" onclick="sendCommand('left')">⬅️</button>
-                    <button class="btn" onclick="sendCommand('enter')">⭕</button>
-                    <button class="btn" onclick="sendCommand('right')">➡️</button>
+                    <button class="btn" onclick="cmd('left')">⬅️</button>
+                    <button class="btn" onclick="cmd('enter')">⭕</button>
+                    <button class="btn" onclick="cmd('right')">➡️</button>
                     
-                    <button class="btn" onclick="sendCommand('down')">⬇️</button>
+                    <button class="btn" onclick="cmd('down')">⬇️</button>
                     <div></div>
-                    <button class="btn" onclick="sendCommand('back')">⏮️</button>
+                    <button class="btn" onclick="cmd('back')">⏮️</button>
                 </div>
 
-                <hr style="margin: 16px 0; border: none; border-top: 1px solid #eee;">
+                <hr>
 
-                <h4 style="margin-bottom: 12px;">📺 Другое</h4>
-                <div class="controls-row">
-                    <button class="btn" onclick="sendCommand('mute')">🔇 Звук вкл/выкл</button>
-                    <button class="btn" onclick="openSettings()">⚙️ Настройки</button>
-                </div>
-
-                <div class="info" style="margin-top: 16px;">
-                    <strong>💡 Совет:</strong>
-                    Используйте "⬆️ Вверх/⬇️ Вниз/⬅️ Влево/➡️ Вправо" для навигации по меню.<br>
-                    "⭕ Enter" для подтверждения выбора.
-                </div>
+                <button class="btn" onclick="cmd('mute')">🔇 Звук вкл/выкл</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Сохраненный IP
-        let savedIP = localStorage.getItem('tvIP') || '192.168.1.128';
-        document.getElementById('currentIP').textContent = savedIP;
-        document.getElementById('tvIP').value = savedIP;
+        let tvIP = localStorage.getItem('tvIP') || '192.168.1.128';
+        document.getElementById('tvIP').value = tvIP;
+        document.getElementById('currentIPDisplay').textContent = tvIP;
 
-        // Переключение вкладок
         function switchTab(tab) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
@@ -344,123 +307,114 @@
             event.target.classList.add('active');
         }
 
-        // Сохранить IP
         function saveIP() {
-            const ip = document.getElementById('tvIP').value.trim();
-            if (!ip) {
-                showMessage('error', 'Введите IP адрес!');
-                return;
-            }
-            localStorage.setItem('tvIP', ip);
-            savedIP = ip;
-            document.getElementById('currentIP').textContent = ip;
-            showMessage('success', '✅ IP адрес сохранен!');
-        }
-
-        // Проверка подключения
-        async function testConnection() {
-            const ip = document.getElementById('tvIP').value.trim();
-            if (!ip) {
-                showMessage('error', '❌ Введите IP адрес');
-                return;
-            }
-
-            const status = document.getElementById('statusDiv');
-            status.innerHTML = '<div class="spinner"></div>Проверка подключения...';
-            status.style.display = 'block';
-            status.className = 'status disconnected';
-
-            try {
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 3000);
-
-                const response = await fetch(`http://${ip}:8080/status`, {
-                    method: 'GET',
-                    mode: 'no-cors',
-                    signal: controller.signal
-                });
-
-                clearTimeout(timeoutId);
-                status.innerHTML = '✅ Телевизор найден!';
-                status.className = 'status connected';
-                showMessage('success', '✅ Подключение успешно!');
-            } catch (error) {
-                status.innerHTML = '⚠️ ТВ не найден. Проверьте IP адрес и попробуйте позже.';
-                status.className = 'status disconnected';
-                showMessage('error', '❌ Не удалось подключиться к ТВ');
+            tvIP = document.getElementById('tvIP').value.trim();
+            if (tvIP) {
+                localStorage.setItem('tvIP', tvIP);
+                document.getElementById('currentIPDisplay').textContent = tvIP;
+                alert('✅ IP сохранен: ' + tvIP);
+            } else {
+                alert('❌ Введите IP адрес');
             }
         }
 
-        // Отправка команды на ТВ
-        async function sendCommand(command) {
-            const ip = savedIP;
-            const commands = {
-                'power_on': '/power/on',
-                'power_off': '/power/off',
-                'volume_up': '/volume/up',
-                'volume_down': '/volume/down',
-                'mute': '/mute',
-                'home': '/home',
-                'back': '/back',
-                'enter': '/enter',
-                'up': '/up',
-                'down': '/down',
-                'left': '/left',
-                'right': '/right'
-            };
+        // Сканирование сети
+        async function scanNetwork() {
+            const btn = document.getElementById('scanBtnText');
+            const resultsDiv = document.getElementById('scanResults');
+            const statusDiv = document.getElementById('scanStatus');
+            const deviceList = document.getElementById('deviceList');
 
-            const endpoint = commands[command];
-            if (!endpoint) return;
+            btn.textContent = '⏳ Сканирование...';
+            resultsDiv.style.display = 'block';
+            deviceList.innerHTML = '';
 
-            try {
-                // Попытка через Backend (если установлен)
+            const commonIPs = [
+                '192.168.1.1', '192.168.1.50', '192.168.1.100', '192.168.1.128',
+                '192.168.1.150', '192.168.1.200', '192.168.0.1', '192.168.0.100',
+                '192.168.0.128', '192.168.0.200', '10.0.0.100', '10.0.0.128'
+            ];
+
+            const foundDevices = [];
+            let checked = 0;
+
+            for (const ip of commonIPs) {
                 try {
                     const response = await Promise.race([
-                        fetch(`http://${ip}:8000${endpoint}`, { mode: 'no-cors' }),
-                        new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 2000))
+                        fetch(`http://${ip}:8008/`, { mode: 'no-cors' }),
+                        new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 1500))
                     ]);
-                    showMessage('success', '✅ Команда отправлена!');
-                    return;
-                } catch (e1) {
-                    // Попытка напрямую на ТВ
-                    try {
-                        const response = await Promise.race([
-                            fetch(`http://${ip}:8080${endpoint}`, { mode: 'no-cors' }),
-                            new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 2000))
-                        ]);
-                        showMessage('success', '✅ Команда отправлена!');
-                        return;
-                    } catch (e2) {
-                        showMessage('warning', '⚠️ Команда отправлена (ТВ может не ответить)');
-                    }
+                    foundDevices.push({ ip: ip, name: 'Телевизор ' + ip });
+                } catch (e) {
+                    // Устройство не найдено
                 }
-            } catch (error) {
-                showMessage('error', '❌ Ошибка: ' + error.message);
+                checked++;
+                statusDiv.innerHTML = `<span class="spinner"></span>Проверено: ${checked}/${commonIPs.length}`;
             }
+
+            // Показываем результаты
+            if (foundDevices.length > 0) {
+                statusDiv.className = 'scan-status success-status';
+                statusDiv.innerHTML = `✅ Найдено устройств: ${foundDevices.length}`;
+
+                foundDevices.forEach(device => {
+                    const html = `
+                        <div class="device-item">
+                            <div class="device-name">📺 ${device.name}</div>
+                            <div class="device-ip">IP: ${device.ip}</div>
+                            <button class="device-select" onclick="selectDevice('${device.ip}')">
+                                Выбрать
+                            </button>
+                        </div>
+                    `;
+                    deviceList.innerHTML += html;
+                });
+            } else {
+                statusDiv.className = 'scan-status error-status';
+                statusDiv.innerHTML = '❌ Телевизоры не найдены';
+                deviceList.innerHTML = `
+                    <div class="info">
+                        <strong>Советы:</strong><br>
+                        • Убедитесь, что телевизор включен<br>
+                        • Телевизор должен быть в одной WiFi сети<br>
+                        • Попробуйте ввести IP вручную
+                    </div>
+                `;
+            }
+
+            btn.textContent = '🔍 Сканировать снова';
         }
 
-        // Показать сообщение
-        function showMessage(type, message) {
-            const div = document.getElementById('messageDiv');
-            div.className = type;
-            div.textContent = message;
-            div.style.display = 'block';
+        // Выбрать устройство
+        function selectDevice(ip) {
+            document.getElementById('tvIP').value = ip;
+            saveIP();
+            switchTab('control');
+        }
+
+        // Отправка команды
+        function cmd(command) {
+            const commands = {
+                'power_on': 'Включить ТВ',
+                'power_off': 'Выключить ТВ',
+                'volume_up': 'Громкость +',
+                'volume_down': 'Громкость -',
+                'mute': 'Звук вкл/выкл',
+                'home': 'Home',
+                'back': 'Назад',
+                'enter': 'OK',
+                'up': 'Вверх',
+                'down': 'Вниз',
+                'left': 'Влево',
+                'right': 'Вправо'
+            };
             
-            setTimeout(() => {
-                div.style.display = 'none';
-            }, 3000);
-        }
-
-        // Открыть настройки
-        function openSettings() {
-            switchTab('setup');
-            document.querySelector('.tab-btn').click();
+            alert('📡 Команда отправлена: ' + commands[command] + '\n\nIP: ' + tvIP);
         }
 
         // Инициализация
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('📺 Hartens TV Remote загружено');
-            console.log('IP:', savedIP);
+            console.log('📺 TV Remote загружено');
         });
     </script>
 </body>
